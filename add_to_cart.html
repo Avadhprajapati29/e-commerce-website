@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+    <link href="bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .cart-item img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+        }
+
+        .cart-item .product-info {
+            flex: 1;
+            padding-left: 15px;
+        }
+
+        .cart-item .price {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .cart-item .remove-btn {
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        .cart-item .remove-btn:hover {
+            background-color: darkred;
+        }
+
+        .cart-total {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-top: 20px;
+            text-align: right;
+        }
+
+        .cart-btn {
+            width: 100%;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        .cart-btn:hover {
+            background-color: #218838;
+        }
+
+        .modal-body {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .modal-footer .btn-secondary {
+            background-color: #f0ad4e;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="#">My Store</a>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="add_to_cart.html">Cart</a>
+                    </li>
+                    <li class="nav-item cart-icon">
+                        <a class="nav-link" href="add_to_cart.html">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="badge" id="cart-count">0</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <h3>Your Cart</h3>
+        <div id="cart-items"></div>
+        <div id="cart-total" class="cart-total"></div>
+        <button class="cart-btn" data-bs-toggle="modal" data-bs-target="#billModal" onclick="openBillModal()">Proceed to
+            Checkout</button>
+    </div>
+
+    <!-- Modal for Bill -->
+    <div class="modal fade" id="billModal" tabindex="-1" aria-labelledby="billModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="billModalLabel">Invoice</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Price (₹)</th>
+                                <th>Quantity</th>
+                                <th>Total (₹)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bill-items"></tbody>
+                    </table>
+                    <div class="text-end">
+                        <strong>Total Amount: ₹<span id="bill-total">0</span></strong>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="completePurchase()">Complete
+                        Purchase</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            document.getElementById("cart-count").innerText = cart.length;
+        }
+
+        function renderCart() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const cartItemsContainer = document.getElementById("cart-items");
+            const cartTotalContainer = document.getElementById("cart-total");
+
+            cartItemsContainer.innerHTML = '';
+
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = "<p>Your cart is empty.</p>";
+                cartTotalContainer.innerHTML = "";
+                return;
+            }
+
+            let totalPrice = 0;
+
+            cart.forEach(item => {
+                totalPrice += item.price;
+
+                const cartItem = document.createElement("div");
+                cartItem.classList.add("cart-item");
+                cartItem.innerHTML = `
+                    <img src="image/${item.name.toLowerCase()}.jpg" alt="${item.name}">
+                    <div class="product-info">
+                        <h5>${item.name}</h5>
+                        <p class="price">₹${item.price}</p>
+                    </div>
+                    <button class="remove-btn" onclick="removeFromCart('${item.name}')">Remove</button>
+                `;
+                cartItemsContainer.appendChild(cartItem);
+            });
+
+            cartTotalContainer.innerHTML = `Total: ₹${totalPrice}`;
+        }
+
+        function removeFromCart(productName) {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            cart = cart.filter(item => item.name !== productName);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            renderCart();
+            updateCartCount();
+        }
+
+        function openBillModal() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const billItemsContainer = document.getElementById("bill-items");
+            const totalContainer = document.getElementById("bill-total");
+
+            billItemsContainer.innerHTML = '';
+
+            if (cart.length === 0) {
+                billItemsContainer.innerHTML = "<tr><td colspan='4' class='text-center'>Your cart is empty.</td></tr>";
+                totalContainer.innerText = "0";
+                return;
+            }
+
+            let totalAmount = 0;
+
+            cart.forEach(item => {
+                const itemTotal = item.price;
+                totalAmount += itemTotal;
+
+                const billItem = document.createElement("tr");
+                billItem.innerHTML = `
+                    <td>${item.name}</td>
+                    <td>₹${item.price}</td>
+                    <td>1</td>
+                    <td>₹${itemTotal}</td>
+                `;
+                billItemsContainer.appendChild(billItem);
+            });
+
+            totalContainer.innerText = totalAmount;
+        }
+
+        function completePurchase() {
+            alert("Purchase completed successfully!");
+            localStorage.removeItem('cart');
+            renderCart();
+            updateCartCount();
+            document.getElementById("bill-items").innerHTML = '';
+            document.getElementById("bill-total").innerText = '0';
+            $('#billModal').modal('hide');
+        }
+
+        window.onload = function () {
+            renderCart();
+            updateCartCount();
+        };
+    </script>
+
+    <script src="bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

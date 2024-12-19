@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shoe Listing</title>
+    <link href="bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        .price {
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .cart-btn {
+            width: 100%;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        .cart-btn:hover {
+            background-color: #0056b3;
+        }
+
+        /* Style for the cart icon in navbar */
+        .cart-icon {
+            position: relative;
+            font-size: 1.5rem;
+            margin-left: 20px;
+        }
+
+        .cart-icon .badge {
+            position: absolute;
+            top: -5px;
+            right: -10px;
+            background-color: red;
+            color: white;
+            border-radius: 50%;
+            padding: 5px 10px;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="#">Shoe Store</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Shoes</a>
+                    </li>
+                    <li class="nav-item cart-icon">
+                        <a class="nav-link" href="add_to_cart.html">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="badge" id="cart-count">0</span> <!-- Cart item count -->
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row">
+            <!-- Shoe 1 -->
+            <div class="col-md-4 ">
+                <div class="card mb-4">
+                    <img src="image/Nike Air Max.jpg" class="card-img-top" alt="Nike Air Max">
+                    <div class="card-body">
+                        <h5 class="card-title" style="text-align: center;">Nike Air Max</h5>
+                        <p class="card-text">Men's running shoes with cushioned sole</p>
+                        <p class="price">₹8,999 <span class="text-muted"><del>₹10,999</del></span> (18% off)</p>
+                        <button class="cart-btn" onclick="addToCart('Nike Air Max', 8999)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+            <!-- Shoe 2 -->
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <img src="image/adidas ultraboost.jpg" class="card-img-top" alt="Adidas UltraBoost">
+                    <div class="card-body">
+                        <h5 class="card-title" style="text-align: center;">Adidas UltraBoost</h5>
+                        <p class="card-text">High-performance running shoes with Boost technology</p>
+                        <p class="price">₹11,499 <span class="text-muted"><del>₹13,499</del></span> (15% off)</p>
+                        <button class="cart-btn" onclick="addToCart('Adidas UltraBoost', 11499)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+            <!-- Shoe 3 -->
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <img src="image/puma speed.jpg" class="card-img-top" alt="Puma Speed">
+                    <div class="card-body">
+                        <h5 class="card-title" style="text-align: center;">Puma Speed</h5>
+                        <p class="card-text">Lightweight running shoes for speed and agility</p>
+                        <p class="price">₹4,499 <span class="text-muted"><del>₹5,999</del></span> (25% off)</p>
+                        <button class="cart-btn" onclick="addToCart('Puma Speed', 4499)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+            <!-- Shoe 4 -->
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <img src="image/Reebok Classic.jpg" class="card-img-top" alt="Reebok Classic">
+                    <div class="card-body">
+                        <h5 class="card-title" style="text-align: center;">Reebok Classic</h5>
+                        <p class="card-text">Classic lifestyle sneakers with retro design</p>
+                        <p class="price">₹3,299 <span class="text-muted"><del>₹4,299</del></span> (23% off)</p>
+                        <button class="cart-btn" onclick="addToCart('Reebok Classic', 3299)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+            <!-- Shoe 5 -->
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <img src="image/nike jordan.jpg" class="card-img-top" alt="Nike Jordan">
+                    <div class="card-body">
+                        <h5 class="card-title" style="text-align: center;">Nike Jordan</h5>
+                        <p class="card-text">Signature basketball shoes for premium performance</p>
+                        <p class="price">₹15,499 <span class="text-muted"><del>₹18,499</del></span> (16% off)</p>
+                        <button class="cart-btn" onclick="addToCart('Nike Jordan', 15499)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+            <!-- Shoe 6 -->
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <img src="image/skechers go walk.jpg" class="card-img-top" alt="Skechers Go Walk">
+                    <div class="card-body">
+                        <h5 class="card-title" style="text-align: center;">Skechers Go Walk</h5>
+                        <p class="card-text">Comfortable slip-on walking shoes for all-day wear</p>
+                        <p class="price">₹2,799 <span class="text-muted"><del>₹3,999</del></span> (30% off)</p>
+                        <button class="cart-btn" onclick="addToCart('Skechers Go Walk', 2799)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+            <!-- Shoe 7 -->
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <img src="image/adidas nmd.jpg" class="card-img-top" alt="Adidas NMD">
+                    <div class="card-body">
+                        <h5 class="card-title" style="text-align: center;">Adidas NMD</h5>
+                        <p class="card-text">Stylish urban sneakers with modern technology</p>
+                        <p class="price">₹9,499 <span class="text-muted"><del>₹11,999</del></span> (21% off)</p>
+                        <button class="cart-btn" onclick="addToCart('Adidas NMD', 9499)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+            <!-- Shoe 8 -->
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <img src="image/underarmour hovr.jpg" class="card-img-top" alt="Under Armour HOVR">
+                    <div class="card-body">
+                        <h5 class="card-title" style="text-align: center;">Under Armour HOVR</h5>
+                        <p class="card-text">Running shoes with advanced cushioning technology</p>
+                        <p class="price">₹12,499 <span class="text-muted"><del>₹15,999</del></span> (22% off)</p>
+                        <button class="cart-btn" onclick="addToCart('Under Armour HOVR', 12499)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+            <!-- Shoe 9 -->
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <img src="image/newbalance 990.jpg" class="card-img-top" alt="New Balance 990">
+                    <div class="card-body">
+                        <h5 class="card-title" style="text-align: center;">New Balance 990</h5>
+                        <p class="card-text">Premium lifestyle sneakers with superior comfort</p>
+                        <p class="price">₹13,999 <span class="text-muted"><del>₹16,499</del></span> (15% off)</p>
+                        <button class="cart-btn" onclick="addToCart('New Balance 990', 13999)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+            <!-- Shoe 10 -->
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <img src="image/airjordan retro.jpg" class="card-img-top" alt="Air Jordan Retro">
+                    <div class="card-body">
+                        <h5 class="card-title" style="text-align: center;">Air Jordan Retro</h5>
+                        <p class="card-text">Iconic retro sneakers for basketball and streetwear</p>
+                        <p class="price">₹18,499 <span class="text-muted"><del>₹22,999</del></span> (20% off)</p>
+                        <button class="cart-btn" onclick="addToCart('Air Jordan Retro', 18499)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+        function updateCartCount() {
+            document.getElementById("cart-count").innerText = cart.length;
+        }
+
+        function addToCart(productName, price) {
+            cart.push({ name: productName, price: price });
+            localStorage.setItem('cart', JSON.stringify(cart));
+            console.log(cart);
+            updateCartCount();
+        }
+
+        updateCartCount();
+    </script>
+
+    <script src="bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
