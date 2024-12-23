@@ -12,86 +12,87 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px;
+            margin-bottom: 20px;
+            padding: 10px;
             border-bottom: 1px solid #ddd;
         }
 
         .cart-item img {
-            width: 60px;
-            height: 60px;
-            object-fit: cover;
+            max-width: 50px;
+            margin-right: 20px;
         }
 
-        .cart-item .product-info {
-            flex: 1;
-            padding-left: 15px;
-        }
-
-        .cart-item .price {
-            font-weight: bold;
-            color: #333;
-        }
-
-        .cart-item .remove-btn {
-            background-color: red;
+        .cart-item button {
+            background-color: #dc3545;
             color: white;
             border: none;
             padding: 5px 10px;
             cursor: pointer;
         }
 
-        .cart-item .remove-btn:hover {
-            background-color: darkred;
+        .cart-item button:hover {
+            background-color: #c82333;
         }
 
-        .cart-total {
+        .total-price {
             font-size: 1.5em;
             font-weight: bold;
             margin-top: 20px;
-            text-align: right;
         }
 
-        .cart-btn {
-            width: 100%;
+        .checkout-btn {
             background-color: #28a745;
             color: white;
+            padding: 10px 20px;
+            font-size: 1.2em;
             border: none;
-            padding: 10px;
-            font-size: 1rem;
             cursor: pointer;
+            display: block;
+            width: 100%;
+            margin-top: 20px;
         }
 
-        .cart-btn:hover {
+        .checkout-btn:hover {
             background-color: #218838;
-        }
-
-        .modal-body {
-            max-height: 400px;
-            overflow-y: auto;
-        }
-
-        .modal-footer .btn-secondary {
-            background-color: #f0ad4e;
         }
     </style>
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <!-- <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">
-            <a class="navbar-brand" href="#">My Store</a>
+            <a class="navbar-brand" href="#">Shoe Store</a>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="index.html">Home</a>
+                        <a class="nav-link active" href="index.html">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="add_to_cart.html">Cart</a>
+                        <a class="nav-link" href="cart.html">
+                            <i class="fas fa-shopping-cart"></i> Cart
+                            <span class="badge" id="cart-count">0</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav> -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="#">Shoe Store</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="index.html">Home</a>
                     </li>
                     <li class="nav-item cart-icon">
                         <a class="nav-link" href="add_to_cart.html">
-                            <i class="fas fa-shopping-cart"></i>
-                            <span class="badge" id="cart-count">0</span>
+                            cart<i class="fas fa-shopping-cart"></i>
+                            <span class="badge" id="cart-count">0</span> <!-- Cart item count -->
                         </a>
                     </li>
                 </ul>
@@ -100,140 +101,77 @@
     </nav>
 
     <div class="container mt-5">
-        <h3>Your Cart</h3>
-        <div id="cart-items"></div>
-        <div id="cart-total" class="cart-total"></div>
-        <button class="cart-btn" data-bs-toggle="modal" data-bs-target="#billModal" onclick="openBillModal()">Proceed to
-            Checkout</button>
-    </div>
-
-    <!-- Modal for Bill -->
-    <div class="modal fade" id="billModal" tabindex="-1" aria-labelledby="billModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="billModalLabel">Invoice</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Item</th>
-                                <th>Price (₹)</th>
-                                <th>Quantity</th>
-                                <th>Total (₹)</th>
-                            </tr>
-                        </thead>
-                        <tbody id="bill-items"></tbody>
-                    </table>
-                    <div class="text-end">
-                        <strong>Total Amount: ₹<span id="bill-total">0</span></strong>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" onclick="completePurchase()">Complete
-                        Purchase</button>
-                </div>
-            </div>
+        <h2>Your Shopping Cart</h2>
+        <div id="cart-items">
+            <!-- Cart items will be dynamically inserted here -->
         </div>
+        <div class="total-price" id="total-price">Total: ₹0</div>
+        <button class="checkout-btn" onclick="checkout()">Proceed to Checkout</button>
     </div>
 
     <script>
+        // Retrieve cart from local storage or initialize an empty cart if not found
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+        // Function to update the cart item count in the navbar
         function updateCartCount() {
-            const cart = JSON.parse(localStorage.getItem('cart')) || [];
             document.getElementById("cart-count").innerText = cart.length;
         }
 
-        function renderCart() {
-            const cart = JSON.parse(localStorage.getItem('cart')) || [];
-            const cartItemsContainer = document.getElementById("cart-items");
-            const cartTotalContainer = document.getElementById("cart-total");
+        // Function to remove an item from the cart
+        function removeFromCart(index) {
+            cart.splice(index, 1); // Remove item from the array
+            localStorage.setItem('cart', JSON.stringify(cart)); // Save updated cart to local storage
+            updateCartCount();
+            renderCart(); // Re-render the cart after removal
+        }
 
-            cartItemsContainer.innerHTML = '';
+        // Function to render cart items dynamically
+        function renderCart() {
+            const cartItemsContainer = document.getElementById("cart-items");
+            cartItemsContainer.innerHTML = ''; // Clear previous cart items
 
             if (cart.length === 0) {
-                cartItemsContainer.innerHTML = "<p>Your cart is empty.</p>";
-                cartTotalContainer.innerHTML = "";
+                cartItemsContainer.innerHTML = '<p>Your cart is empty.</p>';
+                document.getElementById("total-price").innerText = 'Total: ₹0';
                 return;
             }
 
-            let totalPrice = 0;
-
-            cart.forEach(item => {
-                totalPrice += item.price;
-
-                const cartItem = document.createElement("div");
-                cartItem.classList.add("cart-item");
+            let total = 0;
+            cart.forEach((item, index) => {
+                total += item.price;
+                const cartItem = document.createElement('div');
+                cartItem.classList.add('cart-item');
                 cartItem.innerHTML = `
-                    <img src="image/${item.name.toLowerCase()}.jpg" alt="${item.name}">
-                    <div class="product-info">
-                        <h5>${item.name}</h5>
-                        <p class="price">₹${item.price}</p>
+                    <div>
+                        <img src="image/${item.name.toLowerCase().replace(/\s+/g, '')}.jpg" alt="${item.name}">
+                        <span>${item.name}</span>
                     </div>
-                    <button class="remove-btn" onclick="removeFromCart('${item.name}')">Remove</button>
+                    <div>
+                        <span>₹${item.price}</span>
+                        <button onclick="removeFromCart(${index})">Remove</button>
+                    </div>
                 `;
                 cartItemsContainer.appendChild(cartItem);
             });
 
-            cartTotalContainer.innerHTML = `Total: ₹${totalPrice}`;
+            // Update total price
+            document.getElementById("total-price").innerText = `Total: ₹${total}`;
         }
 
-        function removeFromCart(productName) {
-            let cart = JSON.parse(localStorage.getItem('cart')) || [];
-            cart = cart.filter(item => item.name !== productName);
-            localStorage.setItem('cart', JSON.stringify(cart));
-            renderCart();
-            updateCartCount();
-        }
-
-        function openBillModal() {
-            const cart = JSON.parse(localStorage.getItem('cart')) || [];
-            const billItemsContainer = document.getElementById("bill-items");
-            const totalContainer = document.getElementById("bill-total");
-
-            billItemsContainer.innerHTML = '';
-
+        // Function to handle checkout (for now just a placeholder)
+        function checkout() {
             if (cart.length === 0) {
-                billItemsContainer.innerHTML = "<tr><td colspan='4' class='text-center'>Your cart is empty.</td></tr>";
-                totalContainer.innerText = "0";
-                return;
+                alert("Your cart is empty. Please add items to the cart before proceeding.");
+            } else {
+                alert("Proceeding to checkout...");
+                // You can add real checkout functionality here (e.g., redirect to payment page)
             }
-
-            let totalAmount = 0;
-
-            cart.forEach(item => {
-                const itemTotal = item.price;
-                totalAmount += itemTotal;
-
-                const billItem = document.createElement("tr");
-                billItem.innerHTML = `
-                    <td>${item.name}</td>
-                    <td>₹${item.price}</td>
-                    <td>1</td>
-                    <td>₹${itemTotal}</td>
-                `;
-                billItemsContainer.appendChild(billItem);
-            });
-
-            totalContainer.innerText = totalAmount;
         }
 
-        function completePurchase() {
-            alert("Purchase completed successfully!");
-            localStorage.removeItem('cart');
-            renderCart();
-            updateCartCount();
-            document.getElementById("bill-items").innerHTML = '';
-            document.getElementById("bill-total").innerText = '0';
-            $('#billModal').modal('hide');
-        }
-
-        window.onload = function () {
-            renderCart();
-            updateCartCount();
-        };
+        // Initial call to render the cart items and update the count
+        renderCart();
+        updateCartCount();
     </script>
 
     <script src="bootstrap.bundle.min.js"></script>
