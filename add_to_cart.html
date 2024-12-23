@@ -59,24 +59,6 @@
 </head>
 
 <body>
-    <!-- <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container">
-            <a class="navbar-brand" href="#">Shoe Store</a>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="index.html">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="cart.html">
-                            <i class="fas fa-shopping-cart"></i> Cart
-                            <span class="badge" id="cart-count">0</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav> -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">
             <a class="navbar-brand" href="#">Shoe Store</a>
@@ -103,33 +85,28 @@
     <div class="container mt-5">
         <h2>Your Shopping Cart</h2>
         <div id="cart-items">
-            <!-- Cart items will be dynamically inserted here -->
         </div>
         <div class="total-price" id="total-price">Total: ₹0</div>
         <button class="checkout-btn" onclick="checkout()">Proceed to Checkout</button>
     </div>
 
     <script>
-        // Retrieve cart from local storage or initialize an empty cart if not found
         let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-        // Function to update the cart item count in the navbar
         function updateCartCount() {
             document.getElementById("cart-count").innerText = cart.length;
         }
 
-        // Function to remove an item from the cart
         function removeFromCart(index) {
-            cart.splice(index, 1); // Remove item from the array
-            localStorage.setItem('cart', JSON.stringify(cart)); // Save updated cart to local storage
+            cart.splice(index, 1);
+            localStorage.setItem('cart', JSON.stringify(cart));
             updateCartCount();
-            renderCart(); // Re-render the cart after removal
+            renderCart();
         }
 
-        // Function to render cart items dynamically
         function renderCart() {
             const cartItemsContainer = document.getElementById("cart-items");
-            cartItemsContainer.innerHTML = ''; // Clear previous cart items
+            cartItemsContainer.innerHTML = '';
 
             if (cart.length === 0) {
                 cartItemsContainer.innerHTML = '<p>Your cart is empty.</p>';
@@ -155,21 +132,17 @@
                 cartItemsContainer.appendChild(cartItem);
             });
 
-            // Update total price
             document.getElementById("total-price").innerText = `Total: ₹${total}`;
         }
 
-        // Function to handle checkout (for now just a placeholder)
         function checkout() {
             if (cart.length === 0) {
                 alert("Your cart is empty. Please add items to the cart before proceeding.");
             } else {
                 alert("Proceeding to checkout...");
-                // You can add real checkout functionality here (e.g., redirect to payment page)
             }
         }
-
-        // Initial call to render the cart items and update the count
+        
         renderCart();
         updateCartCount();
     </script>
